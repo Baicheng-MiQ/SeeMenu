@@ -10,7 +10,8 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.ybccby.SeeMenu"
+      "bundleIdentifier": "com.ybccby.SeeMenu",
+      "appleTeamId": "22FFH6R833"
     },
     "android": {
       "adaptiveIcon": {
@@ -18,8 +19,6 @@
         "backgroundColor": "#ffffff"
       },
       "permissions": [
-        "android.permission.CAMERA",
-        "android.permission.RECORD_AUDIO",
         "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO"
       ],

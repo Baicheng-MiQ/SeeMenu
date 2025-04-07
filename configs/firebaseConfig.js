@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getVertexAI, getGenerativeAI } from 'firebase/generative-ai';
+import { getVertexAI } from 'firebase/vertexai';
 
 // Initialize Firebase
 const firebaseConfig = {
