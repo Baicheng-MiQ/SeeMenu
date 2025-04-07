@@ -4,9 +4,10 @@ import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 interface CameraProps {
   onPictureTaken?: (photo: string) => void;
+  disableShutter?: boolean;
 }
 
-export default function Camera({ onPictureTaken }: CameraProps) {
+export default function Camera({ onPictureTaken, disableShutter = false }: CameraProps) {
   const [torch, setTorch] = useState(false);
   const [permission, requestPermission] = useCameraPermissions();
   const cameraRef = useRef<CameraView>(null);
@@ -23,7 +24,7 @@ export default function Camera({ onPictureTaken }: CameraProps) {
   }, [permission]);
 
   const takePicture = async () => {
-    if (cameraRef.current) {
+    if (cameraRef.current && !disableShutter) {
       const photo = await cameraRef.current.takePictureAsync();
       onPictureTaken?.(photo?.uri ?? '');
     }
@@ -54,7 +55,10 @@ export default function Camera({ onPictureTaken }: CameraProps) {
         pictureSize={pictureSizes[0]}
         ref={cameraRef}>
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button} onPress={takePicture}>
+          <TouchableOpacity 
+            style={[styles.button, disableShutter && styles.disabledButton]} 
+            onPress={takePicture}
+            disabled={disableShutter}>
             <Text style={styles.text}>Take Photo</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={() => setTorch(!torch)}>
@@ -89,6 +93,9 @@ const styles = StyleSheet.create({
     flex: 1,
     alignSelf: 'flex-end',
     alignItems: 'center',
+  },
+  disabledButton: {
+    opacity: 0.5,
   },
   text: {
     fontSize: 24,

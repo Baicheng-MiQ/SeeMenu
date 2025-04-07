@@ -7,21 +7,31 @@ import {
   Modal, 
   Text, 
   StyleSheet, 
-  Dimensions 
+  Dimensions,
+  GestureResponderEvent
 } from 'react-native';
 
 interface GalleryProps {
   photos: string[];
   onPhotoSelect?: (photoUri: string) => void;
+  onPhotoDelete?: (photoUri: string) => void;
+  onSubmit?: () => void;
 }
 
-export default function Gallery({ photos, onPhotoSelect }: GalleryProps) {
+export default function Gallery({ photos, onPhotoSelect, onPhotoDelete, onSubmit }: GalleryProps) {
   const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
 
   const handlePhotoPress = (photoUri: string) => {
     setSelectedPhoto(photoUri);
     if (onPhotoSelect) {
       onPhotoSelect(photoUri);
+    }
+  };
+
+  const handlePhotoDelete = (e: GestureResponderEvent, photoUri: string) => {
+    e.stopPropagation();
+    if (onPhotoDelete) {
+      onPhotoDelete(photoUri);
     }
   };
 
@@ -53,9 +63,23 @@ export default function Gallery({ photos, onPhotoSelect }: GalleryProps) {
             style={styles.thumbnailContainer}
           >
             <Image source={{ uri: photo }} style={styles.thumbnail} />
+            <TouchableOpacity 
+              style={styles.deleteButton}
+              onPress={(e) => handlePhotoDelete(e, photo)}
+            >
+              <Text style={styles.deleteButtonText}>✕</Text>
+            </TouchableOpacity>
           </TouchableOpacity>
         ))}
       </ScrollView>
+      
+      <TouchableOpacity 
+        style={[styles.submitButton, photos.length === 0 && styles.submitButtonDisabled]}
+        onPress={onSubmit}
+        disabled={photos.length === 0}
+      >
+        <Text style={styles.submitButtonText}>Submit</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -67,6 +91,8 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: '#f0f0f0',
     paddingVertical: 10,
+    position: 'relative',
+    minHeight: 110,
   },
   scrollContent: {
     paddingHorizontal: 5,
@@ -94,7 +120,7 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     position: 'absolute',
-    top: 40,
+    bottom: 40,
     right: 20,
     backgroundColor: 'rgba(0,0,0,0.5)',
     borderRadius: 20,
@@ -106,6 +132,39 @@ const styles = StyleSheet.create({
   closeButtonText: {
     color: 'white',
     fontSize: 20,
+    fontWeight: 'bold',
+  },
+  submitButton: {
+    position: 'absolute',
+    right: 15,
+    bottom: 15,
+    backgroundColor: '#4CAF50',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5
+  },
+  submitButtonDisabled: {
+    backgroundColor: '#CCCCCC',
+    opacity: 0.7,
+  },
+  submitButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  deleteButton: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    borderRadius: 10,
+    width: 20,
+    height: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  deleteButtonText: {
+    color: 'white',
+    fontSize: 12,
     fontWeight: 'bold',
   },
 }); 

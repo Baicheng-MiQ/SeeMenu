@@ -8,16 +8,25 @@ export default function Index() {
   const [photos, setPhotos] = useState<string[]>([]);
 
   const handlePictureTaken = (photoUri: string) => {
-    setPhotos([...photos, photoUri]);
+    if (photos.length < 3) {
+      setPhotos([...photos, photoUri]);
+    }
+  };
+
+  const handlePhotoDelete = (photoUri: string) => {
+    setPhotos(photos.filter(uri => uri !== photoUri));
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.cameraContainer}>
-        <Camera onPictureTaken={handlePictureTaken} />
+        <Camera 
+          onPictureTaken={handlePictureTaken} 
+          disableShutter={photos.length >= 3} 
+        />
       </View>
       <View style={styles.galleryContainer}>
-        <Gallery photos={photos} />
+        <Gallery photos={photos} onPhotoDelete={handlePhotoDelete} />
       </View>
     </View>
   );
