@@ -60,7 +60,8 @@ export default function Result() {
                       name: Schema.string(),
                       description: Schema.string(),
                       price: Schema.number(),
-                      search_term: Schema.string({description: "Suggest some search terms for the menu item, friendly for image search engines to find an accurate image of the item"}),
+                      search_term: Schema.string({description: 
+                        "Suggest some search terms, friendly for image search engines to find an accurate image of the item. Remove any marketing words and focus on the dish itself."}),
                     },
                     optionalProperties: ["description", "price"],
                   }),
@@ -76,12 +77,13 @@ export default function Result() {
         model: "gemini-2.0-flash",
         generationConfig: {
           responseMimeType: "application/json",
-          responseSchema: menuSchema
+          responseSchema: menuSchema,
+          temperature: 0.5,
         }
       });
 
       // Create prompt and convert images
-      const prompt = "These are images of a restaurant menu. Extract all menu items into categories. For each item, extract the name, description (if available), price (if available), and suggest a search term. Return the data as a structured menu.";
+      const prompt = "These are images of a restaurant menu. Extract all menu items into categories. For each item, extract the name, description (if available), price (if available), and suggest some search terms, friendly for image search engines to find an accurate image of the item. Return the data as a structured menu.";
       const imageParts = await Promise.all(photos.map(imageToGenerativePart));
 
       // Generate content

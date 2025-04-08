@@ -1,61 +1,29 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image, ActivityIndicator } from 'react-native';
 import { MenuItem } from '../types/menu';
+import { useImageSearch } from '../types/imageSearch';
 
 type Props = {
   item: MenuItem;
 };
 
-const API_KEY = process.env.EXPO_PUBLIC_GOOGLE_PROGRAMMABLE_SEARCH_ENGINE_KEY; // Replace with your actual API key
-const CX_ID = process.env.EXPO_PUBLIC_GOOGLE_PROGRAMMABLE_SEARCH_ENGINE_ID; // Replace with your actual CX ID
-
 export default function MenuItemDisplay({ item }: Props) {
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
-
-  async function searchImage() {
-    if (!item.search_term) return;
-    if (!API_KEY || !CX_ID ) {
-        console.warn("API Key or CX ID is not configured.");
-        setError("Image search not configured.");
-        return;
-    }
-
-    setLoading(true);
-    setError(null);
-    setImageUrl(null);
-
-    const requestOptions = {
-      method: "GET",
-      redirect: "follow"
-    } as RequestInit;
-
-    const searchTerm = item.search_term.toLowerCase() + " food";
-    const query = encodeURIComponent(searchTerm);
-    const url = `https://www.googleapis.com/customsearch/v1?key=${API_KEY}&cx=${CX_ID}&q=${query}&searchType=image&safe=active&num=3&rights=cc_publicdomain,cc_attribute,cc_sharealike`;
-
-    try {
-      const response = await fetch(url, requestOptions);
-      const result = await response.json();
-
-      if (result.items && result.items.length > 0 && result.items[0].link) {
-        setImageUrl(result.items[0].link);
-      } else {
-          console.log("No image found for:", searchTerm);
-        setError("No image found.");
-      }
-    } catch (fetchError) {
-      console.error("Fetch Error:", fetchError);
-      setError("Failed to fetch image.");
-    } finally {
-      setLoading(false);
-    }
-  }
+  const [{ urls, loading, error }, searchImages] = useImageSearch();
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   useEffect(() => {
-    searchImage();
+    if (item.search_term) {
+      searchImages(item.search_term);
+    }
+    // Reset image index when search term changes
+    setCurrentImageIndex(0);
   }, [item.search_term]); // Re-run search if search_term changes
+
+  const handleImageError = () => {
+    if (currentImageIndex < urls.length - 1) {
+      setCurrentImageIndex(currentImageIndex + 1);
+    }
+  };
 
   return (
     <View style={styles.menuItem}>
@@ -69,8 +37,13 @@ export default function MenuItemDisplay({ item }: Props) {
         </View>
         {loading && <ActivityIndicator size="small" style={styles.loadingIndicator} color="#0000ff" />}
         {error && <Text style={styles.errorText}>{error}</Text>}
-        {imageUrl && !loading && !error && (
-            <Image source={{ uri: imageUrl }} style={styles.itemImage} resizeMode="cover" />
+        {urls.length > 0 && !loading && !error && (
+            <Image 
+              source={{ uri: urls[currentImageIndex] }} 
+              style={styles.itemImage} 
+              resizeMode="cover"
+              onError={handleImageError}
+            />
         )}
        </View>
        {item.search_term && <Text style={styles.itemSearchTerm}>Search Term: {item.search_term}</Text>}
