@@ -1,8 +1,9 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import { useState } from "react";
-import Camera from "./camera";
+import Camera from "@/components/camera";
 import Gallery from "@/components/Gallery";
+import { router } from "expo-router";
 
 export default function Index() {
   const [photos, setPhotos] = useState<string[]>([]);
@@ -17,6 +18,13 @@ export default function Index() {
     setPhotos(photos.filter(uri => uri !== photoUri));
   };
 
+  const handleSubmit = () => {
+    router.push({
+      pathname: "/result",
+      params: { photos:JSON.stringify(photos) }
+    });
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.cameraContainer}>
@@ -26,7 +34,7 @@ export default function Index() {
         />
       </View>
       <View style={styles.galleryContainer}>
-        <Gallery photos={photos} onPhotoDelete={handlePhotoDelete} />
+        <Gallery photos={photos} onPhotoDelete={handlePhotoDelete} onSubmit={handleSubmit} />
       </View>
     </View>
   );
