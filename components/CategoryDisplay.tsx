@@ -1,17 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import MenuItemDisplay from './MenuItemDisplay';
-
-type MenuItem = {
-  name: string;
-  description?: string;
-  price?: number;
-};
-
-type Category = {
-  category_name: string;
-  items: MenuItem[];
-};
+import { MenuItem, Category } from '../types/menu';
 
 type Props = {
   category: Category;
