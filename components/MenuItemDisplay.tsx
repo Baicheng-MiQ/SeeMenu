@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, Image, ActivityIndicator, Modal, TouchableOpacity, Dimensions } from 'react-native';
 import { MenuItem } from '../types/menu';
 import { useImageSearch } from '../types/imageSearch';
 
@@ -10,6 +10,7 @@ type Props = {
 export default function MenuItemDisplay({ item }: Props) {
   const [{ urls, loading, error }, searchImages] = useImageSearch();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [fullScreenVisible, setFullScreenVisible] = useState(false);
 
   useEffect(() => {
     if (item.search_term) {
@@ -38,15 +39,38 @@ export default function MenuItemDisplay({ item }: Props) {
         {loading && <ActivityIndicator size="small" style={styles.loadingIndicator} color="#0000ff" />}
         {error && <Text style={styles.errorText}>{error}</Text>}
         {urls.length > 0 && !loading && !error && (
-            <Image 
-              source={{ uri: urls[currentImageIndex] }} 
-              style={styles.itemImage} 
-              resizeMode="cover"
-              onError={handleImageError}
-            />
+            <TouchableOpacity onPress={() => setFullScreenVisible(true)}>
+              <Image 
+                source={{ uri: urls[currentImageIndex] }} 
+                style={styles.itemImage} 
+                resizeMode="cover"
+                onError={handleImageError}
+              />
+            </TouchableOpacity>
         )}
        </View>
-       {item.search_term && <Text style={styles.itemSearchTerm}>Search Term: {item.search_term}</Text>}
+       {item.search_term && <Text style={styles.itemSearchTerm}>Showing image for: {item.search_term}</Text>}
+       
+       <Modal
+          visible={fullScreenVisible}
+          transparent={true}
+          animationType="fade"
+          onRequestClose={() => setFullScreenVisible(false)}
+        >
+          <TouchableOpacity 
+            style={styles.fullScreenModal} 
+            activeOpacity={1} 
+            onPress={() => setFullScreenVisible(false)}
+          >
+            {urls.length > 0 && (
+              <Image
+                source={{ uri: urls[currentImageIndex] }}
+                style={styles.fullScreenImage}
+                resizeMode="contain"
+              />
+            )}
+          </TouchableOpacity>
+        </Modal>
     </View>
   );
 }
@@ -101,7 +125,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     backgroundColor: '#eee', // Placeholder background
   },
-   errorText: {
+  errorText: {
     fontSize: 14,
     color: 'red',
     marginTop: 4,
@@ -110,5 +134,15 @@ const styles = StyleSheet.create({
     //center the loading indicator
     alignSelf: 'center',
     marginRight: 40,
+  },
+  fullScreenModal: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.9)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  fullScreenImage: {
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height,
   },
 }); 
