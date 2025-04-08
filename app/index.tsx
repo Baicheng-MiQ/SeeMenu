@@ -23,6 +23,7 @@ export default function Index() {
       pathname: "/result",
       params: { photos:JSON.stringify(photos) }
     });
+    setPhotos([]);
   };
 
   return (

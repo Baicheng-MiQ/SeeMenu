@@ -4,17 +4,7 @@ import { useState, useEffect } from "react";
 import { getGenerativeModel, Schema } from "firebase/vertexai";
 import { vertexAI } from "@/configs/firebaseConfig";
 import CategoryDisplay from "../components/CategoryDisplay";
-
-type MenuItem = {
-  name: string;
-  description?: string;
-  price?: number;
-};
-
-type Category = {
-  category_name: string;
-  items: MenuItem[];
-};
+import { MenuItem, Category } from "../types/menu";
 
 type MenuData = {
   categories: Category[];
@@ -79,7 +69,7 @@ export default function Result() {
           }),
         },
       });
-
+      console.log("AI is working");
       // Create GenerativeModel instance with schema
       const model = getGenerativeModel(vertexAI, { 
         model: "gemini-2.0-flash",
@@ -94,7 +84,7 @@ export default function Result() {
       const imageParts = await Promise.all(photos.map(imageToGenerativePart));
 
       // Generate content
-      const result = await model.generateContent([prompt, ...imageParts]);
+      const result = await model.generateContent([...imageParts, prompt]);
       const response = result.response;
       const jsonResponse = JSON.parse(response.text());
       setMenuData(jsonResponse);
