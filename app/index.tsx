@@ -1,12 +1,20 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, StyleSheet } from "react-native";
 import { useState } from "react";
 import Camera from "@/components/camera";
 import Gallery from "@/components/Gallery";
-import { router } from "expo-router";
+import { router, useNavigation } from "expo-router";
 
 export default function Index() {
   const [photos, setPhotos] = useState<string[]>([]);
+  const [cameraOn, setCameraOn] = useState<boolean>(true);
+  
+  const navigation = useNavigation();
+  const isFocused = navigation.isFocused();
+  
+  useEffect(() => {
+    setCameraOn(isFocused);
+  }, [isFocused]);
 
   const handlePictureTaken = (photoUri: string) => {
     if (photos.length < 3) {
@@ -23,6 +31,7 @@ export default function Index() {
       pathname: "/result",
       params: { photos:JSON.stringify(photos) }
     });
+    setCameraOn(false);
     setPhotos([]);
   };
 
@@ -30,6 +39,7 @@ export default function Index() {
     <View style={styles.container}>
       <View style={styles.cameraContainer}>
         <Camera 
+          active={cameraOn}
           onPictureTaken={handlePictureTaken} 
           disableShutter={photos.length >= 3} 
         />

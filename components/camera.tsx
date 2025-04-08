@@ -5,9 +5,10 @@ import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 interface CameraProps {
   onPictureTaken?: (photo: string) => void;
   disableShutter?: boolean;
+  active?: boolean;
 }
 
-export default function Camera({ onPictureTaken, disableShutter = false }: CameraProps) {
+export default function Camera({ onPictureTaken, disableShutter = false, active = true }: CameraProps) {
   const [torch, setTorch] = useState(false);
   const [permission, requestPermission] = useCameraPermissions();
   const cameraRef = useRef<CameraView>(null);
@@ -48,6 +49,7 @@ export default function Camera({ onPictureTaken, disableShutter = false }: Camer
   return (
     <View style={styles.container}>
       <CameraView 
+        active={active}
         style={styles.camera} 
         facing={'back'}
         autofocus='on'
