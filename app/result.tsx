@@ -60,7 +60,7 @@ export default function Result() {
                       name: Schema.string(),
                       description: Schema.string(),
                       price: Schema.number(),
-                      search_term: Schema.string({description: "A short and descriptive search term for the menu item, suitable for image search engines"}),
+                      search_term: Schema.string({description: "Suggest some search terms for the menu item, friendly for image search engines to find an accurate image of the item"}),
                     },
                     optionalProperties: ["description", "price"],
                   }),
@@ -81,7 +81,7 @@ export default function Result() {
       });
 
       // Create prompt and convert images
-      const prompt = "These are images of a restaurant menu. Extract all menu items into categories. For each item, extract the name, description (if available), price (if available), and suggest a search term (can be the same as the name). Return the data as a structured menu.";
+      const prompt = "These are images of a restaurant menu. Extract all menu items into categories. For each item, extract the name, description (if available), price (if available), and suggest a search term. Return the data as a structured menu.";
       const imageParts = await Promise.all(photos.map(imageToGenerativePart));
 
       // Generate content
