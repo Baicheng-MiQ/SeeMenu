@@ -49,7 +49,7 @@ export default function MenuItemDisplay({ item }: Props) {
             </TouchableOpacity>
         )}
        </View>
-       {item.search_term && <Text style={styles.itemSearchTerm}>Showing image for: {item.search_term}</Text>}
+       {/* {item.search_term && <Text style={styles.itemSearchTerm}>Showing image for: {item.search_term}</Text>} */}
        
        <Modal
           visible={fullScreenVisible}
@@ -80,11 +80,20 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     paddingBottom: 8,
     borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
+    borderBottomColor: '#f0f0f0',
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    padding: 14,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 1,
   },
   contentContainer: {
-      flexDirection: 'row',
-      alignItems: 'flex-start', // Align items to the top
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 12,
   },
   textContainer: {
       flex: 1, // Takes up remaining space
@@ -93,37 +102,45 @@ const styles = StyleSheet.create({
   menuItemHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 4, // Add space below header
+    marginBottom: 6,
+    alignItems: 'baseline',
   },
   itemName: {
-    fontSize: 16,
-    fontWeight: '600',
-    flexShrink: 1, // Allow name to shrink if needed
-    marginRight: 8, // Add space between name and price
+    fontSize: 17,
+    fontWeight: '700',
+    color: '#1a1a1a',
+    maxWidth: '70%',
   },
   itemPrice: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#2e7d32',
-    marginLeft: 'auto', // Push price to the right
+    color: '#2d9f5c',
+    backgroundColor: '#f0faf4',
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 4,
   },
   itemDescription: {
     fontSize: 14,
-    color: '#666',
+    color: '#4a4a4a',
+    lineHeight: 20,
     marginTop: 4,
   },
-  itemSearchTerm: { // Optional: Keep if you want to display the search term
-    fontSize: 12,
+  itemSearchTerm: {
+    fontSize: 11,
     color: '#888',
-    fontStyle: 'italic',
-    marginTop: 6,
+    marginTop: 8,
+    letterSpacing: 0.2,
   },
   itemImage: {
-    width: 100,
-    height: 100,
-    borderRadius: 4,
-    backgroundColor: '#eee', // Placeholder background
+    width: 130,
+    height: 130,
+    borderRadius: 6,
+    backgroundColor: '#f5f5f5',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
   },
   errorText: {
     fontSize: 14,
@@ -137,9 +154,7 @@ const styles = StyleSheet.create({
   },
   fullScreenModal: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.9)',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.95)',
   },
   fullScreenImage: {
     width: Dimensions.get('window').width,

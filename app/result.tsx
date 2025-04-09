@@ -117,7 +117,6 @@ export default function Result() {
       </View>
       
       <View style={styles.analysisContainer}>
-        <Text style={styles.title}>Menu Items</Text>
         {loading ? (
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color="#0000ff" />
@@ -152,13 +151,8 @@ const styles = StyleSheet.create({
   },
   analysisContainer: {
     backgroundColor: '#f5f5f5',
-    padding: 16,
+    padding: 8,
     borderRadius: 8,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 12,
   },
   loadingContainer: {
     alignItems: 'center',
