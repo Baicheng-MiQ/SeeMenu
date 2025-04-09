@@ -78,17 +78,19 @@ export default function Camera({ onPictureTaken, disableShutter = false, active 
         pictureSize={pictureSizes[0]}
         ref={cameraRef}>
         <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.button} onPress={pickImage}>
+            <MaterialIcons name="photo-library" size={24} color="white" />
+          </TouchableOpacity>
+          
           <TouchableOpacity 
-            style={[styles.button, disableShutter && styles.disabledButton]} 
+            style={[styles.shutterButton, disableShutter && styles.disabledButton]} 
             onPress={takePicture}
             disabled={disableShutter}>
-            <MaterialIcons name="camera-alt" size={30} color="white" />
+              <MaterialIcons name="menu-book" size={24} color="darkorange" style={{textAlign: 'center', marginTop: 20}} />
           </TouchableOpacity>
+          
           <TouchableOpacity style={styles.button} onPress={() => setTorch(!torch)}>
-            <MaterialIcons name={torch ? "flash-on" : "flash-off"} size={30} color="white" />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={pickImage}>
-            <MaterialIcons name="photo-library" size={30} color="white" />
+            <MaterialIcons name={torch ? "flash-on" : "flash-off"} size={24} color="white" />
           </TouchableOpacity>
         </View>
       </CameraView>
@@ -100,25 +102,36 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    width: '100%',
+    width: '100%'
   },
   message: {
     textAlign: 'center',
     paddingBottom: 10,
   },
   camera: {
-    flex: 1,
+    flex: 1
   },
   buttonContainer: {
-    flex: 1,
+    position: 'absolute',
+    bottom: 30,
     flexDirection: 'row',
     backgroundColor: 'transparent',
-    margin: 64,
+    width: '100%',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
   },
   button: {
     flex: 1,
     alignSelf: 'flex-end',
     alignItems: 'center',
+    justifyContent: 'center',
+  },
+  shutterButton: {
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+    backgroundColor: 'white',
   },
   disabledButton: {
     opacity: 0.5,
