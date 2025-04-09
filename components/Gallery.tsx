@@ -10,6 +10,7 @@ import {
   Dimensions,
   GestureResponderEvent
 } from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 interface GalleryProps {
   photos: string[];
@@ -78,7 +79,12 @@ export default function Gallery({ photos, onPhotoSelect, onPhotoDelete, onSubmit
         onPress={onSubmit}
         disabled={photos.length === 0}
       >
-        <Text style={styles.submitButtonText}>Submit</Text>
+          <MaterialCommunityIcons 
+            name="star-four-points-outline" 
+            size={24} 
+            color="white" 
+          />
+
       </TouchableOpacity>
     </View>
   );
@@ -137,14 +143,19 @@ const styles = StyleSheet.create({
   submitButton: {
     position: 'absolute',
     right: 15,
-    bottom: 15,
-    backgroundColor: '#4CAF50',
-    paddingVertical: 10,
+    bottom: 25,
+    borderRadius: 99999999,
+    overflow: 'hidden',
+    backgroundColor: '#FF5C00',
+    paddingVertical: 20,
     paddingHorizontal: 20,
-    borderRadius: 5
+    shadowColor: '#FF5C00',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   submitButtonDisabled: {
-    backgroundColor: '#CCCCCC',
     opacity: 0.7,
   },
   submitButtonText: {
