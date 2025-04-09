@@ -22,7 +22,7 @@ export async function searchImage(searchTerm: string): Promise<string[]> {
   } as RequestInit;
 
   const query = encodeURIComponent(searchTerm.toLowerCase() + " food");
-  const url = `https://www.googleapis.com/customsearch/v1?key=${API_KEY}&cx=${CX_ID}&q=${query}&searchType=image&safe=active&num=3&rights=cc_publicdomain,cc_attribute,cc_sharealike`;
+  const url = `https://www.googleapis.com/customsearch/v1?key=${API_KEY}&cx=${CX_ID}&q=${query}&searchType=image&safe=active&num=10&rights=cc_publicdomain,cc_attribute,cc_sharealike`;
 
   try {
     const response = await fetch(url, requestOptions);
