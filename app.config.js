@@ -38,6 +38,12 @@ export default ({ config }) => ({
       }
     ],
     [
+      "expo-image-picker",
+      {
+        "photosPermission": "The app needs access to your photos to pick images for your menu."
+      }
+    ],
+    [
       "expo-splash-screen",
       {
         "image": "./assets/images/splash-icon.png",

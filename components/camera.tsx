@@ -1,6 +1,8 @@
 import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
 import { useState, useRef, useEffect } from 'react';
 import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
+import * as ImagePicker from 'expo-image-picker';
 
 interface CameraProps {
   onPictureTaken?: (photo: string) => void;
@@ -28,6 +30,25 @@ export default function Camera({ onPictureTaken, disableShutter = false, active 
     if (cameraRef.current && !disableShutter) {
       const photo = await cameraRef.current.takePictureAsync();
       onPictureTaken?.(photo?.uri ?? '');
+    }
+  };
+
+  const pickImage = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    
+    if (status !== 'granted') {
+      alert('Sorry, we need camera roll permissions to make this work!');
+      return;
+    }
+    
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      allowsEditing: true,
+      quality: 1,
+    });
+    
+    if (!result.canceled && result.assets && result.assets.length > 0) {
+      onPictureTaken?.(result.assets[0].uri);
     }
   };
 
@@ -61,10 +82,13 @@ export default function Camera({ onPictureTaken, disableShutter = false, active 
             style={[styles.button, disableShutter && styles.disabledButton]} 
             onPress={takePicture}
             disabled={disableShutter}>
-            <Text style={styles.text}>Take Photo</Text>
+            <MaterialIcons name="camera-alt" size={30} color="white" />
           </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={() => setTorch(!torch)}>
-            <Text style={styles.text}>Torch</Text>
+            <MaterialIcons name={torch ? "flash-on" : "flash-off"} size={30} color="white" />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={pickImage}>
+            <MaterialIcons name="photo-library" size={30} color="white" />
           </TouchableOpacity>
         </View>
       </CameraView>
